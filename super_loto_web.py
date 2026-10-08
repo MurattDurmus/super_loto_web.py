@@ -57,18 +57,22 @@ def optimal_dagilim_sec(gecerli_kolonlar, hedef_sayi):
     return secilenler
 
 
-# Sayfa yenilendiğinde havuzun kaybolmaması için Session State yönetimi
 if 'ozel_havuz' not in st.session_state:
     st.session_state.ozel_havuz = "5, 6, 7, 8, 15, 20, 35, 37, 43, 44, 48, 56, 57, 59, 60"
 
 st.title("🧬 Süper Loto DNA Jeneratörü")
-st.markdown("Veri madenciliği ve Kombinatoryal Kapsama ile oluşturulmuş 8 Altın Kural algoritması.")
+st.markdown("Veri madenciliği ve Kombinatoryal Kapsama ile geliştirilmiş akıllı loto algoritması.")
 
 st.header("1. Strateji Seçimi")
 strateji = st.radio("Uygulanacak Modu Seçin:", [
-    "Mod 1: Tüm Sayılardan Kusursuz DNA Süz (Önerilen)",
-    "Mod 2: Kombinatoryal Kapsama (Özel Havuzdan Süz)"
+    "Mod 1: Tüm Sayılardan Kusursuz DNA Süz",
+    "Mod 2: Kombinatoryal Kapsama (Özel 15'li Havuz)",
+    "Mod 3: Geçmişin Mirası (Sıcak Sayı Stratejisi) 🔥"
 ])
+
+havuz_girdisi = ""
+gecen_hafta_girdisi = ""
+miras_hedefi = 1
 
 if "Mod 2" in strateji:
     if st.button("🎲 Makro Kurallara Uygun 15'li Havuz Üret"):
@@ -83,10 +87,14 @@ if "Mod 2" in strateji:
                         4 <= asal_sayisi <= 6):
                     st.session_state.ozel_havuz = ", ".join(str(n) for n in aday_havuz)
                     break
-
     havuz_girdisi = st.text_input("Havuz Sayıları (Virgülle ayırın):", value=st.session_state.ozel_havuz)
-else:
-    havuz_girdisi = ""
+
+elif "Mod 3" in strateji:
+    st.info(
+        "İstatistiklere göre her çekilişte, bir önceki haftanın sayılarından **1 tanesi (%38 ihtimalle)** yeniden düşer. Bu mod, o oranı hedefler.")
+    gecen_hafta_girdisi = st.text_input("Geçen Haftanın 6 Sayısını Girin (Örn: 5, 12, 34, 45, 50, 56):")
+    miras_hedefi = st.radio("Bu 6 sayıdan kaç tanesi yeni kuponlara GARANTİ olarak eklensin?", [1, 2], index=0,
+                            horizontal=True)
 
 st.header("2. Kupon Üretimi")
 col1, col2 = st.columns(2)
@@ -95,32 +103,41 @@ with col1:
 with col2:
     tumunu_uret = False
     if "Mod 2" in strateji:
-        st.markdown("<br>", unsafe_allow_html=True)  # UI hizalaması için boşluk
+        st.markdown("<br>", unsafe_allow_html=True)
         tumunu_uret = st.checkbox("⚠️ Havuzun Kurallara Uyan TÜM İhtimallerini Dök")
 
 if st.button("🚀 KUPONLARI ÜRET", type="primary"):
     baslangic_zamani = time.time()
     uretilen_kolonlar, cop_sayisi = [], 0
 
-    if "Mod 1" in strateji:
-        havuz = list(range(1, 61))
-    else:
+    # MOD 3 HAZIRLIKLARI
+    if "Mod 3" in strateji:
+        try:
+            gecen_hafta_sayilari = list(set([int(s.strip()) for s in gecen_hafta_girdisi.split(',') if s.strip()]))
+            if len(gecen_hafta_sayilari) != 6:
+                st.error("Lütfen geçen haftaya ait tam 6 adet sayı girin.")
+                st.stop()
+            kalan_sayilar = [x for x in range(1, 61) if x not in gecen_hafta_sayilari]
+        except:
+            st.error("Lütfen sayıları virgülle ayırarak doğru formatta girin.")
+            st.stop()
+
+    # MOD 2 HAZIRLIKLARI
+    elif "Mod 2" in strateji:
         try:
             havuz = list(set([int(s.strip()) for s in havuz_girdisi.split(',')]))
             if len(havuz) < 6:
                 st.error("Özel havuz için en az 6 sayı girmelisiniz.")
                 st.stop()
         except:
-            st.error("Lütfen sayıları virgülle ayırarak doğru formatta girin (örn: 5, 12, 34).")
+            st.error("Lütfen sayıları virgülle ayırarak doğru formatta girin.")
             st.stop()
 
-    with st.spinner("DNA süzgeci ve Maksimum Dağılım çalışıyor, lütfen bekleyin..."):
-        if tumunu_uret:
-            if len(havuz) > 20:
-                st.warning(
-                    "20'den fazla sayının tüm ihtimallerini hesaplamak tarayıcıyı kilitler. Bu modu 15-18 sayılık havuzlarda kullanın.")
+    with st.spinner("DNA süzgeci çalışıyor, lütfen bekleyin..."):
+        if tumunu_uret and "Mod 2" in strateji:
+            if len(havuz) > 22:
+                st.warning("Bu mod sadece 22 sayıya kadar olan havuzlarda kullanılabilir.")
                 st.stop()
-
             for aday in combinations(havuz, 6):
                 aday_list = list(aday)
                 if kusursuz_mu(aday_list):
@@ -128,14 +145,27 @@ if st.button("🚀 KUPONLARI ÜRET", type="primary"):
                 else:
                     cop_sayisi += 1
             nihai_kolonlar = uretilen_kolonlar
+
         else:
             uretilen_havuz = []
             hedef_buyukluk = kolon_sayisi * 5
-            deneme, max_deneme = 0, 200000
+            deneme, max_deneme = 0, 300000
 
             while len(uretilen_havuz) < hedef_buyukluk and deneme < max_deneme:
                 deneme += 1
-                aday = sorted(random.sample(havuz, 6))
+
+                # Modlara göre 6'lı aday çekimi
+                if "Mod 1" in strateji:
+                    aday = sorted(random.sample(range(1, 61), 6))
+                elif "Mod 2" in strateji:
+                    aday = sorted(random.sample(havuz, 6))
+                elif "Mod 3" in strateji:
+                    # Hızlandırılmış Miras Algoritması: 1 (veya 2) tane eski sayılardan, kalanı yeni sayılardan al
+                    miras_kismi = random.sample(gecen_hafta_sayilari, miras_hedefi)
+                    yeni_kisim = random.sample(kalan_sayilar, 6 - miras_hedefi)
+                    aday = sorted(miras_kismi + yeni_kisim)
+
+                # Kusursuzluk Testi
                 if aday not in uretilen_havuz:
                     if kusursuz_mu(aday):
                         uretilen_havuz.append(aday)
@@ -157,4 +187,4 @@ if st.button("🚀 KUPONLARI ÜRET", type="primary"):
 
         st.code(sonuc_metni, language="text")
     else:
-        st.error("Seçtiğiniz havuz 8 Altın Kuralla uyuşmuyor. Makine uygun kombinasyon bulamadı, sayıları değiştirin.")
+        st.error("Kurallarla uyuşan kombinasyon bulunamadı. Lütfen girdiğiniz sayıları kontrol edin.")
