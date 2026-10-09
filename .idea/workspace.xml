@@ -1,23 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="87cafd03-0e04-4264-9b47-226dd1caad84" name="Changes" comment="" />
+    <list default="true" id="87cafd03-0e04-4264-9b47-226dd1caad84" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/SuperLoto.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SuperLoto.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/super_loto_web.py" beforeDir="false" afterPath="$PROJECT_DIR$/super_loto_web.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/super_loto_yapay_zeka.py" beforeDir="false" afterPath="$PROJECT_DIR$/super_loto_yapay_zeka.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/veri_cek.py" beforeDir="false" afterPath="$PROJECT_DIR$/veri_cek.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="3KNk1QxQ7J0JMC2GbZQeJZSa60B" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.super_loto_web.executor": "Run",
+    "Python.super_loto_yapay_zeka.executor": "Run",
+    "Python.veri_cek.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/MSİ/PycharmProjects/SuperLoto"
   }
 }]]></component>
   <component name="SharedIndexes">
